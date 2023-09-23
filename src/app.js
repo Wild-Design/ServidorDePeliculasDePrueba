@@ -93,7 +93,7 @@ server.get('/genero', async (req, res) => {
 server.post('/genero/:nombre', async (req, res) => {
   try {
     const { nombre } = req.params;
-    const genero = await Genero.create({ nombre });
+    await Genero.create({ nombre });
     res
       .status(201)
       .json(`Genero ${nombre} agregado a la base de datos correctamente`);
