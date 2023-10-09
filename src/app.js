@@ -17,6 +17,7 @@ server.get('/', (req, res) => {
 
 server.get('/actor', async (req, res) => {
   const { nombre, apellido } = req.query;
+
   try {
     if (nombre && apellido) {
       const actor = await Actor.findOne({
