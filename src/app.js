@@ -8,7 +8,22 @@ const { Server: SocketServer } = require('socket.io');
 
 const app = express();
 const server = createServer(app);
-const io = new SocketServer(server);
+
+const io = new SocketServer(server, {
+  cors: { origin: 'http://127.0.0.1:5500' },
+});
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+
+  socket.on('message', (data) => {
+    //Con esto escucho el mensage que biene del cliente
+    console.log(data);
+
+    //Y con eso envio el mismo mensaje a los clientes que sean diferentes a el mismo
+    socket.broadcast.emit('message', data);
+  });
+});
 
 app.use(express.json());
 app.use(morgan('dev'));
