@@ -1,74 +1,38 @@
 const { Sequelize, DataTypes, UUIDV4 } = require('sequelize');
 
 const sequelize = new Sequelize(
-  `postgres://postgres:1234@localhost:3500/peliculas`,
+  `postgres://postgres:1234@localhost:3500/registros`,
   {
     logging: false,
   }
 );
 
-sequelize.define('Pelicula', {
+sequelize.define('RegistroViaje', {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: UUIDV4,
   },
-  titulo_de_la_pelicula: {
-    type: DataTypes.STRING,
-    unique: true,
+  estado: {
+    type: DataTypes.ENUM('-', 'salio'),
+    allowNull: false,
   },
-  descripcion: {
+  coche: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  ramal: {
     type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  salida: {
+    type: DataTypes.TIME,
+    allowNull: false,
+  },
+  llegada: {
+    type: DataTypes.TIME,
+    allowNull: false,
   },
 });
-
-sequelize.define('Genero', {
-  id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: UUIDV4,
-  },
-  nombre: {
-    type: DataTypes.STRING,
-    unique: true,
-  },
-});
-
-sequelize.define(
-  'Actor',
-  {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: UUIDV4,
-    },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    apellido: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    Fecha_de_nacimiento: {
-      type: DataTypes.DATE,
-    },
-  },
-  {
-    uniqueKeys: {
-      unique_actor: {
-        fields: ['nombre', 'apellido'],
-      },
-    },
-  }
-);
-
-const { Pelicula, Genero, Actor } = sequelize.models;
-
-Pelicula.belongsToMany(Actor, { through: 'Casting' });
-Actor.belongsToMany(Pelicula, { through: 'Casting' });
-
-Pelicula.belongsToMany(Genero, { through: 'PeliculaGenero' });
-Genero.belongsToMany(Pelicula, { through: 'PeliculaGenero' });
 
 module.exports = sequelize;
